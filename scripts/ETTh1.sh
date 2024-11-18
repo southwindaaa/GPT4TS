@@ -12,7 +12,7 @@ for lr in 0.0001
 do
 
 python main.py \
-    --root_path ./datasets/ETT-small/ \
+    --root_path ./datasets/ \
     --data_path ETTh1.csv \
     --model_id ETTh1_$model'_'$gpt_layer'_'$seq_len'_'$pred_len'_'$percent \
     --data ett_h \
