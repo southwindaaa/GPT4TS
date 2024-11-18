@@ -9,6 +9,7 @@ from distutils.util import strtobool
 import pandas as pd
 
 from utils.metrics import metric
+from utils.painting import draw_comparasion,store_str
 
 plt.switch_backend('agg')
 
@@ -323,9 +324,11 @@ def test(model, test_data, test_loader, args, device, itr):
     preds = preds.reshape(-1, preds.shape[-2], preds.shape[-1])
     trues = trues.reshape(-1, trues.shape[-2], trues.shape[-1])
     print('test shape:', preds.shape, trues.shape)
+    mae_sample,mse_sample,mape_sample = draw_comparasion(args,trues,preds,itr)
 
     mae, mse, rmse, mape, mspe, smape, nd = metric(preds, trues)
     # print('mae:{:.4f}, mse:{:.4f}, rmse:{:.4f}, smape:{:.4f}, mases:{:.4f}'.format(mae, mse, rmse, smape, mases))
     print('mae:{:.4f}, mse:{:.4f}, rmse:{:.4f}, smape:{:.4f}'.format(mae, mse, rmse, smape))
+    store_str(args,'mae:{:.4f}, mse:{:.4f}, rmse:{:.4f}, smape:{:.4f}'.format(mae, mse, rmse, smape))
 
     return mse, mae

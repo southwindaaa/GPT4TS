@@ -1,21 +1,20 @@
-
-seq_len=336
+seq_len=168
 model=GPT4TS
 
 for percent in 100
 do
-for pred_len in 96
+for pred_len in 24 72 120 168
 do
 for lr in 0.0001
 do
 
 python main.py \
     --root_path ./datasets/ \
-    --data_path ETTh1.csv \
-    --model_id ETTh1_$model'_'$gpt_layer'_'$seq_len'_'$pred_len'_'$percent \
-    --data ett_h \
+    --data_path RI_G4400010_load.csv \
+    --model_id RI_G4400010_load_$model'_'$gpt_layer'_'$seq_len'_'$pred_len'_'$percent \
+    --data custom \
     --seq_len $seq_len \
-    --label_len 168 \
+    --label_len 84 \
     --pred_len $pred_len \
     --batch_size 256 \
     --lradj type4 \
@@ -37,7 +36,8 @@ python main.py \
     --model $model \
     --tmax 20 \
     --cos 1 \
-    --is_gpt 1
+    --is_gpt 1 \
+    --target electricity
 
 done
 done

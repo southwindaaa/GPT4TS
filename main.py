@@ -1,5 +1,6 @@
 from data_provider.data_factory import data_provider
 from utils.tools import EarlyStopping, adjust_learning_rate, visual, vali, test
+from utils.painting import store_str
 from tqdm import tqdm
 from models.PatchTST import PatchTST
 from models.GPT4TS import GPT4TS
@@ -94,6 +95,7 @@ SEASONALITY_MAP = {
    "yearly": 1
 }
 
+store_str(args,f'seq_len: {args.seq_len}, pred_len: {args.pred_len}')
 mses = []
 maes = []
 
@@ -212,3 +214,5 @@ mses = np.array(mses)
 maes = np.array(maes)
 print("mse_mean = {:.4f}, mse_std = {:.4f}".format(np.mean(mses), np.std(mses)))
 print("mae_mean = {:.4f}, mae_std = {:.4f}".format(np.mean(maes), np.std(maes)))
+store_str(args,"mae_mean = {:.4f}, mae_std = {:.4f}".format(np.mean(maes), np.std(maes)))
+store_str(args,"mse_mean = {:.4f}, mse_std = {:.4f}".format(np.mean(mses), np.std(mses)))
