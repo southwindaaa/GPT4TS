@@ -4,7 +4,7 @@ model=GPT4TS
 
 for percent in 100
 do
-for pred_len in 96
+for pred_len in 96 192 336 720
 do
 for lr in 0.0001
 do

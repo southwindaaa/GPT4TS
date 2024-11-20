@@ -90,6 +90,9 @@ class Dataset_ETT_hour(Dataset):
         self.data_x = data[border1:border2]
         self.data_y = data[border1:border2]
         self.data_stamp = data_stamp
+        if self.set_type == 1:
+            self.last_vali_x = data[border2-self.seq_len:border2,-1]
+            self.first_test_y = data[border2:border2+self.pred_len,-1]
 
     def __getitem__(self, index):
         feat_id = index // self.tot_len

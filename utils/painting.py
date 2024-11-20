@@ -97,6 +97,10 @@ def stroe_mean_std(args,mae_samples,mse_samples,mape_samples):
         f.write(f'seq_len: {args.seq_len}, pred_len: {args.pred_len}\nmae_mean: {mae_mean}\tmae_std: {mae_std}\tmse_mean: {mse_mean}\tmse_std: {mse_std}\tmape_mean: {mape_mean}\tmape_std: {mape_std}\n')
 
 def store_str(args,str):
-    file_name = './results/mae_mses/' +args.data_path.split('.')[0]+'_'+args.model+'_' + args.target + '_' +args.features+'.txt'
+    if args.use_test2==1:
+        test_method  = 'single_test'
+    else:
+        test_method = 'whole test'
+    file_name = '/root/Load_LLM-experiments/Mine_2/GPT4TS/results/mae_mses/' +test_method+'_'+args.data_path.split('.')[0]+'_'+args.model+'_' + args.target + '_' +args.features+'.txt'
     with open(file_name,'a') as f:
         f.write(str+'\n')

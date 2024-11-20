@@ -5,6 +5,7 @@ from tqdm import tqdm
 from models.PatchTST import PatchTST
 from models.GPT4TS import GPT4TS
 from models.DLinear import DLinear
+from utils.metrics import metric
 
 
 import numpy as np
@@ -79,6 +80,9 @@ parser.add_argument('--tmax', type=int, default=10)
 parser.add_argument('--itr', type=int, default=3)
 parser.add_argument('--cos', type=int, default=0)
 
+# test方法2：使用test集的第一条数据进行测试
+parser.add_argument('--use_test2', type=int, default=1)
+
 
 
 args = parser.parse_args()
@@ -114,6 +118,10 @@ for ii in range(args.itr):
     train_data, train_loader = data_provider(args, 'train')
     vali_data, vali_loader = data_provider(args, 'val')
     test_data, test_loader = data_provider(args, 'test')
+
+    
+
+
 
     if args.freq != 'h':
         args.freq = SEASONALITY_MAP[test_data.freq]
@@ -206,7 +214,18 @@ for ii in range(args.itr):
     best_model_path = path + '/' + 'checkpoint.pth'
     model.load_state_dict(torch.load(best_model_path))
     print("------------------------------------")
-    mse, mae = test(model, test_data, test_loader, args, device, ii)
+
+    if args.use_test2==1:
+        model.eval()
+        last_vali_x =  torch.tensor(vali_data.last_vali_x, dtype=torch.float32).to(device).unsqueeze(0).unsqueeze(-1)
+        first_test_y = vali_data.first_test_y
+        predict_y = model(last_vali_x,ii)[:, -args.pred_len:, :].squeeze().detach().cpu().numpy()
+        mae, mse, rmse, mape, mspe, smape, nd = metric(predict_y, first_test_y)
+        # print('mae:{:.4f}, mse:{:.4f}, rmse:{:.4f}, smape:{:.4f}, mases:{:.4f}'.format(mae, mse, rmse, smape, mases))
+        print('mae:{:.4f}, mse:{:.4f}, rmse:{:.4f}, smape:{:.4f}'.format(mae, mse, rmse, smape))
+        store_str(args,'mae:{:.4f}, mse:{:.4f}, rmse:{:.4f}, smape:{:.4f}'.format(mae, mse, rmse, smape))
+    else:
+        mse, mae = test(model, test_data, test_loader, args, device, ii)
     mses.append(mse)
     maes.append(mae)
 
